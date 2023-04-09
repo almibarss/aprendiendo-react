@@ -32,6 +32,7 @@ export function App() {
             {
                 users.map(({ userName, name, isFollowing }) => (
                     <TwitterFollowCard
+                        key={userName}
                         userName={userName}
                         name={name}
                         initialIsFollowing={isFollowing}
