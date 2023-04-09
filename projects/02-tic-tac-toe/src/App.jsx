@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./App.css";
 import { Square } from "./components/Square";
 import { WinnerModal } from "./components/WinnerModal";
+import { useEffect } from "react";
 
 const TURNS = {
   X: "❌",
@@ -27,7 +28,7 @@ function App() {
   });
   const [turn, setTurn] = useState(() => {
     const turnFromLocalStorage = window.localStorage.getItem("turn");
-    return turnFromLocalStorage ? turnFromLocalStorage : TURNS.X;
+    return turnFromLocalStorage ?? TURNS.X
   });
   const [winner, setWinner] = useState(null);
 
@@ -41,9 +42,6 @@ function App() {
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
     setTurn(newTurn);
-
-    window.localStorage.setItem("board", JSON.stringify(newBoard));
-    window.localStorage.setItem("turn", newTurn);
 
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
@@ -72,6 +70,19 @@ function App() {
     setTurn(TURNS.X);
     setWinner(null);
   }
+
+  useEffect(() => {
+    window.localStorage.setItem("turn", turn)
+  }, [turn]);
+
+  useEffect(() => {
+    window.localStorage.setItem("board", JSON.stringify(board))
+  }, [board]);
+
+  useEffect(() => {
+    window.localStorage.removeItem("board")
+    window.localStorage.removeItem("turn")
+  }, [winner]);
 
   return (
     <main className="board">
